@@ -1,2 +1,2 @@
 all:
-	g++ -lSDL2 -lGL -lGLEW main.cpp algs.cpp; ./a.out
+	g++ -g -std=c++11 -lSDL2 -lGL -lGLEW main.cpp algs.cpp glShaderHelpers.cpp

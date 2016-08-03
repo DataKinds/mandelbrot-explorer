@@ -1,4 +1,4 @@
-#include <GL/glu.h>
+#include <GL/glew.h>
 #include <string>
 
 std::string readFile(std::string filePath);
