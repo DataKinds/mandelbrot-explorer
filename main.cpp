@@ -6,14 +6,8 @@
 #define SW 512
 #define SH 512
 
-void pix(SDL_Renderer* ren, int x, int y, unsigned char r, unsigned char g, unsigned char b) {
-    SDL_SetRenderDrawColor(ren, r, g, b, 255);
-    SDL_RenderDrawPoint(ren, x, y);
-}
 
-//what it used to be is in comments
-//void draw(SDL_Window* win, SDL_Renderer* ren) {
-void draw(SDL_Window* win, SDL_GLContext glc) {
+void draw(SDL_Window* win) {
     //draw a rect to cover the screen
     float rectPoints[] = {
         0.0f, 0.0f, 0.0f,
@@ -41,19 +35,26 @@ void draw(SDL_Window* win, SDL_GLContext glc) {
     //tell gpu what's in buffer
     glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), rectPoints, GL_STATIC_DRAW);
 
+    //load up the shader
+    GLuint shaderProgram = glCreateProgram();
+    glAttachShader(shaderProgram, loadAndCompileShader("fragShader.glsl", GL_FRAGMENT_SHADER));
+    glAttachShader(shaderProgram, loadAndCompileShader("vertShader.glsl", GL_VERTEX_SHADER));
+    //link it all together
+    glLinkProgram(shaderProgram);
+
+    /*--------------------------------------------*/
+    //EVERYTHING ABOVE THIS LINE SHOULD BE ELSEWHERE AND
+    //__NOT__
+    //CALLED EVERY FRAME
+    //clear the screen
     glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    /*
-    SDL_RenderClear(ren);
-    for (int x = 0; x++ < SW;){
-        for (int y = 0; y++ < SH;){
-            pix(ren, x, y, red(x,y), green(x,y), blue(x,y));
-            //printf("drawing at (%i, %i) with color 0x%02x%02x%02x\n", x, y, c, c, c);
-        }
-    }
-    SDL_RenderPresent(ren);
-    */
-    //draw to the screen
+    //load them nice shaders
+    glUseProgram(shaderProgram);
+    //use the VAO we defined earlier
+    glBindVertexArray(vao);
+    //draw the rectPoints
+    glDrawArrays(GL_TRIANGLES, 0, 4);
     SDL_GL_SwapWindow(win);
 }
 
@@ -92,7 +93,7 @@ int main(int argc, char* argv[]) {
     //done with glew
 
     while (update(win)) {
-        draw(win, glc);
+        draw(win);
     }
     SDL_GL_DeleteContext(glc);
     SDL_DestroyWindow(win);
