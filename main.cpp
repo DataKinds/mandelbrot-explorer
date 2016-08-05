@@ -2,8 +2,8 @@
 #include <GL/glew.h>
 #include <GL/glu.h>
 #include "glShaderHelpers.h"
-#define SW 1024
-#define SH 1024
+#define SW 768
+#define SH 768
 
 float rectPoints[] = {
     -1.0f, 1.0f,
@@ -16,6 +16,7 @@ GLuint vao;
 GLuint bigRectVbo;
 GLuint shaderProgram;
 GLint scaleLoc;
+GLint centerLoc;
 unsigned long long frameNum = 0;
 
 void draw(SDL_Window* win) {
@@ -43,8 +44,19 @@ int update(SDL_Window* win) {
             if (e.key.keysym.sym == SDLK_q) {
                 return 0;
             }
-            else if (e.key.keysym.sym == SDLK_e) {
-
+            else if (e.key.keysym.sym == SDLK_r) {
+                GLfloat currentScale;
+                glGetUniformfv(shaderProgram, scaleLoc, &currentScale);
+                currentScale += 0.1f;
+                glUniform1f(scaleLoc, currentScale);
+            }
+            else if (e.key.keysym.sym == SDLK_f) {
+                GLfloat currentScale;
+                glGetUniformfv(shaderProgram, scaleLoc, &currentScale);
+                if (currentScale > 0.1f) {
+                    currentScale -= 0.1f;
+                }
+                glUniform1f(scaleLoc, currentScale);
             }
         }
     }
@@ -101,6 +113,7 @@ int main(int argc, char* argv[]) {
     //use it
     glUseProgram(shaderProgram);
     //pass in the screen height and width
+    //required
     GLint screenDimsLoc = glGetUniformLocation(shaderProgram, "screenDims");
     if (screenDimsLoc != -1) {
         glUniform2i(screenDimsLoc, SW, SH);
@@ -109,7 +122,7 @@ int main(int argc, char* argv[]) {
         printf("Screen dims set in GLSL as %f, %f\n", outDims[0], outDims[1]);
     } else {
         printf("Please define `screenDims` ivec2 in the fragShader.\n");
-        //return 0;
+        return 0;
     }
     //bind the framenum uniform
     GLint frameNumLoc = glGetUniformLocation(shaderProgram, "frameNum");
@@ -119,12 +132,21 @@ int main(int argc, char* argv[]) {
         printf("Please define `frameNum` uint in the fragShader.\n");
         //return 0;
     }
+    //required
     scaleLoc = glGetUniformLocation(shaderProgram, "scale");
     if (scaleLoc != -1) {
-        //continue with the stuff
+        //make scale default to 0.25 (-2.0 to 2.0 in coords)
+        glUniform1f(scaleLoc, 0.25f);
     } else {
         printf("Please define `scale` float in the fragShader.\n");
-        //return 0;
+    }
+    //required
+    centerLoc = glGetUniformLocation(shaderProgram, "center");
+    if (centerLoc != -1) {
+        //make default center -2
+        glUniform2f(centerLoc, -2.0f, -2.0f);
+    } else {
+        printf("Please define `center` vec2 in the fragShader.\n");
     }
     //finally, go into the main loop (praise jesus)
     while (update(win)) {
