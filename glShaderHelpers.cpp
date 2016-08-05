@@ -22,5 +22,16 @@ GLuint loadAndCompileShader(std::string programPath, GLenum shaderType) {
     int shaderId = glCreateShader(shaderType);
     glShaderSource(shaderId, 1, &programCStr, NULL);
     glCompileShader(shaderId);
+    GLint success = 0;
+    glGetShaderiv(shaderId, GL_COMPILE_STATUS, &success);
+    if (success == GL_FALSE) {
+        //compilation failed, put error message
+        GLint logSize = 0;
+        glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &logSize);
+        GLchar errorLog[logSize];
+        glGetShaderInfoLog(shaderId, logSize, NULL, errorLog);
+        printf("%s\n", errorLog);
+        //haha return it anyway the actual madman
+    }
     return shaderId;
 }

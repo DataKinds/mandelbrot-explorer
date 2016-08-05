@@ -1,6 +1,7 @@
-#version 400
+#version 330
 out vec4 frag_color;
 in vec4 gl_FragCoord;
 void main () {
-    frag_color = vec4(0.5, 0.0, 0.5, 1.0);
+    //rgba
+    frag_color = vec4(1.0, 1.0, 1.0, 1.0);
 }

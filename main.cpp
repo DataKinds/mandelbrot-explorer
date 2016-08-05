@@ -18,14 +18,16 @@ GLuint shaderProgram;
 
 void draw(SDL_Window* win) {
     //clear the screen
-    glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     //load them nice shaders
     glUseProgram(shaderProgram);
     //use the VAO we defined earlier
+    //(which is populated with rectPoints[])
     glBindVertexArray(vao);
     //draw the rectPoints
-    glDrawArrays(GL_TRIANGLES, 0, 4);
+    //TODO: MAKE RECT ACTUALLY RECTANGLE
+    glDrawArrays(GL_PATCHES, 0, 4);
     SDL_GL_SwapWindow(win);
 }
 
@@ -65,11 +67,11 @@ int main(int argc, char* argv[]) {
     //initialize the VAOs and VBOs
     //put the points in a Vertex Buffer Object
     //pretty much, the VBO just holds info about
-    //a shape
+    //a shape - position, color, etc.
     bigRectVbo = 0;
-    //populate vbo
+    //generate vbo
     glGenBuffers(1, &bigRectVbo);
-    //put buffer on graphics card
+    //put info in vbo
     glBindBuffer(GL_ARRAY_BUFFER, bigRectVbo);
     //tell gpu what's in buffer
     glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), rectPoints, GL_STATIC_DRAW);
@@ -81,8 +83,8 @@ int main(int argc, char* argv[]) {
     glBindVertexArray(vao);
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vao);
-    //the VAO is set up, define it for the GPU
-    //say it holds the VBO at index 0
+    //pass the VAO to argument 0 of the vertex shader
+    //3 points at a time
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
     //load up the shader
