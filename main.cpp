@@ -41,22 +41,48 @@ int update(SDL_Window* win) {
             return 0;
         } else if (e.type == SDL_KEYDOWN) {
             printf("%i\n", e.key.keysym.sym);
-            if (e.key.keysym.sym == SDLK_q) {
+            auto eK = e.key.keysym.sym;
+            if (eK == SDLK_q) {
                 return 0;
             }
-            else if (e.key.keysym.sym == SDLK_r) {
+            //zooming
+            else if (eK == SDLK_r) {
                 GLfloat currentScale;
                 glGetUniformfv(shaderProgram, scaleLoc, &currentScale);
                 currentScale += 0.1f;
+                printf("Current scale: %f\n", currentScale);
                 glUniform1f(scaleLoc, currentScale);
             }
-            else if (e.key.keysym.sym == SDLK_f) {
+            else if (eK == SDLK_f) {
                 GLfloat currentScale;
                 glGetUniformfv(shaderProgram, scaleLoc, &currentScale);
                 if (currentScale > 0.1f) {
                     currentScale -= 0.1f;
                 }
                 glUniform1f(scaleLoc, currentScale);
+            }
+            //scrolling
+            else if ((eK == SDLK_UP) || (eK == SDLK_DOWN) || (eK == SDLK_LEFT) || (eK == SDLK_RIGHT)) {
+                GLfloat currentCenter[2];
+                glGetUniformfv(shaderProgram, centerLoc, currentCenter);
+                GLfloat currentScale;
+                glGetUniformfv(shaderProgram, scaleLoc, &currentScale);
+                GLfloat moveFactor = currentScale / 2;
+                switch (eK) {
+                    case SDLK_UP: {
+                        currentCenter[1] -= moveFactor;
+                    }
+                    case SDLK_DOWN: {
+                        currentCenter[1] += moveFactor;
+                    }
+                    case SDLK_LEFT: {
+                        currentCenter[0] -= moveFactor;
+                    }
+                    case SDLK_RIGHT: {
+                        currentCenter[0] += moveFactor;
+                    }
+                }
+                printf("Current center: %f, %f; moved by %f\n", currentCenter[0], currentCenter[1], moveFactor);
             }
         }
     }
@@ -144,7 +170,7 @@ int main(int argc, char* argv[]) {
     centerLoc = glGetUniformLocation(shaderProgram, "center");
     if (centerLoc != -1) {
         //make default center -2
-        glUniform2f(centerLoc, -2.0f, -2.0f);
+        glUniform2f(centerLoc, 2.0f, 2.0f);
     } else {
         printf("Please define `center` vec2 in the fragShader.\n");
     }

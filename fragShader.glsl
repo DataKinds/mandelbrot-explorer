@@ -31,7 +31,7 @@ void main() {
     //0.0 to 4.0
     vec2 fractalCoords = (gl_FragCoord.xy * (1 / scale)) / screenDims.xy;
     //-2.0 to 2.0
-    fractalCoords = fractalCoords - 2;
+    fractalCoords = fractalCoords - center;
     vec3 shade = vec3(iterationsToEscape(fractalCoords) / 100.0);
     //ivec2 fragInt = ivec2(int(gl_FragCoord.x), int(gl_FragCoord.y));
     //if ((fragInt.x ^ fragInt.y) == mod(frameNum, 256)) {
