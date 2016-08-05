@@ -7,10 +7,11 @@
 #define SH 512
 
 float rectPoints[] = {
-    0.0f, 0.0f, 0.0f,
-    1.0f, 0.0f, 0.0f,
-    1.0f, 1.0f, 0.0f,
-    0.0f, 1.0f, 0.0f,
+    -1.0f, 1.0f,
+    1.0f, 1.0f,
+    1.0f, -1.0f,
+    -1.0f, -1.0f,
+    -1.0f, 1.0f
 };
 GLuint vao;
 GLuint bigRectVbo;
@@ -26,8 +27,7 @@ void draw(SDL_Window* win) {
     //(which is populated with rectPoints[])
     glBindVertexArray(vao);
     //draw the rectPoints
-    //TODO: MAKE RECT ACTUALLY RECTANGLE
-    glDrawArrays(GL_PATCHES, 0, 4);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
     SDL_GL_SwapWindow(win);
 }
 
@@ -84,8 +84,8 @@ int main(int argc, char* argv[]) {
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vao);
     //pass the VAO to argument 0 of the vertex shader
-    //3 points at a time
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+    //2 points at a time
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
 
     //load up the shader
     shaderProgram = glCreateProgram();
@@ -93,7 +93,13 @@ int main(int argc, char* argv[]) {
     glAttachShader(shaderProgram, loadAndCompileShader("vertShader.glsl", GL_VERTEX_SHADER));
     //link it all together
     glLinkProgram(shaderProgram);
-
+    //pass in the screen height and width
+    GLint screenDims = glGetUniformLocation(shaderProgram, "screenDims");
+    if (screenDims != -1) {
+        glUniform2f(screenDims, SW, SH);
+    } else {
+        printf("Please define `screenDims` in the fragShader.\n");
+    }
     //finally, go into the main loop (praise jesus)
     while (update(win)) {
         draw(win);
