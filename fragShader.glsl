@@ -6,7 +6,7 @@ uniform uint frameNum;
 void main () {
     vec3 shade = vec3(0.0);
     ivec2 fragInt = ivec2(int(gl_FragCoord.x), int(gl_FragCoord.y));
-    if ((fragInt.x & fragInt.y) == 0) {
+    if ((fragInt.x ^ fragInt.y) == mod(frameNum, 256)) {
         shade = vec3(1.0);
     } else {
     }
