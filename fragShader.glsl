@@ -3,12 +3,35 @@ out vec4 frag_color;
 in vec4 gl_FragCoord;
 uniform ivec2 screenDims;
 uniform uint frameNum;
-void main () {
-    vec3 shade = vec3(0.0);
-    ivec2 fragInt = ivec2(int(gl_FragCoord.x), int(gl_FragCoord.y));
-    if ((fragInt.x ^ fragInt.y) == mod(frameNum, 256)) {
-        shade = vec3(1.0);
-    } else {
+
+float magnitude(float real, float imaginary) {
+    return sqrt(pow(real, 2.0) + pow(imaginary, 2.0));
+}
+
+int iterationsToEscape(float x, float y) {
+    float a = 0;
+    float b = 0;
+    int iterations = 0;
+    //(a + bi)^2
+    //(a^2 + 2abi - b^2)
+    //real part (a) = (a^2 - b^2)
+    //imaginary part (b) = (2abi)
+    //full formula:
+    //nextIteration (a and b) = lastIteration (a and b)^2 + c (x and y)
+    while ((magnitude(a, b) < 2.0) && iterations < 200) {
+        a = (pow(a, 2.0) - pow(b, 2.0)) + x;
+        b = (2*a*b) + y;
+        iterations++;
     }
+    return iterations;
+}
+
+void main() {
+    vec3 shade = vec3(iterationsToEscape(gl_FragCoord.x / screenDims.x, gl_FragCoord.y / screenDims.y) / 200.0);
+    //ivec2 fragInt = ivec2(int(gl_FragCoord.x), int(gl_FragCoord.y));
+    //if ((fragInt.x ^ fragInt.y) == mod(frameNum, 256)) {
+    //    shade = vec3(1.0);
+    //} else {
+    //}
     frag_color = vec4(shade, 1.0);
 }
