@@ -16,8 +16,16 @@ float rectPoints[] = {
 GLuint vao;
 GLuint bigRectVbo;
 GLuint shaderProgram;
+long long frameNum = 0;
 
 void draw(SDL_Window* win) {
+    //bind the framenum uniform
+    GLint frameNumLoc = glGetUniformLocation(shaderProgram, "frameNum");
+    if (frameNumLoc != -1) {
+        glUniform1i(frameNumLoc, frameNum);
+    } else {
+        printf("Please define `frameNum` in the fragShader.\n");
+    }
     //clear the screen
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -45,6 +53,7 @@ int update(SDL_Window* win) {
         }
     }
     SDL_Delay(10); //delay the amount to keep framerate
+    frameNum++;
     return 1;
 }
 
@@ -94,9 +103,9 @@ int main(int argc, char* argv[]) {
     //link it all together
     glLinkProgram(shaderProgram);
     //pass in the screen height and width
-    GLint screenDims = glGetUniformLocation(shaderProgram, "screenDims");
-    if (screenDims != -1) {
-        glUniform2f(screenDims, SW, SH);
+    GLint screenDimsLoc = glGetUniformLocation(shaderProgram, "screenDims");
+    if (screenDimsLoc != -1) {
+        glUniform2f(screenDimsLoc, SW, SH);
     } else {
         printf("Please define `screenDims` in the fragShader.\n");
     }
