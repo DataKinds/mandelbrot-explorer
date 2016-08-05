@@ -82,6 +82,7 @@ int update(SDL_Window* win) {
                         currentCenter[0] += moveFactor;
                     }
                 }
+                glUniform2f(centerLoc, currentCenter[0], currentCenter[1]);
                 printf("Current center: %f, %f; moved by %f\n", currentCenter[0], currentCenter[1], moveFactor);
             }
         }
