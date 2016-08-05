@@ -18,7 +18,7 @@ int iterationsToEscape(float x, float y) {
     //imaginary part (b) = (2abi)
     //full formula:
     //nextIteration (a and b) = lastIteration (a and b)^2 + c (x and y)
-    while ((magnitude(a, b) < 2.0) && iterations < 200) {
+    while ((magnitude(a, b) < 2.0) && iterations < 100) {
         a = (pow(a, 2.0) - pow(b, 2.0)) + x;
         b = (2*a*b) + y;
         iterations++;
@@ -27,7 +27,11 @@ int iterationsToEscape(float x, float y) {
 }
 
 void main() {
-    vec3 shade = vec3(iterationsToEscape(gl_FragCoord.x / screenDims.x, gl_FragCoord.y / screenDims.y) / 200.0);
+    //0.0 to 4.0
+    vec2 fractalCoords = gl_FragCoord.xy / (screenDims.xy / 4.0);
+    //-2.0 to 2.0
+    fractalCoords = fractalCoords - 2.0;
+    vec3 shade = vec3(iterationsToEscape(fractalCoords.x, fractalCoords.y) / 100.0);
     //ivec2 fragInt = ivec2(int(gl_FragCoord.x), int(gl_FragCoord.y));
     //if ((fragInt.x ^ fragInt.y) == mod(frameNum, 256)) {
     //    shade = vec3(1.0);
