@@ -67,7 +67,7 @@ int update(SDL_Window* win) {
                 glGetUniformfv(shaderProgram, centerLoc, currentCenter);
                 GLfloat currentScale;
                 glGetUniformfv(shaderProgram, scaleLoc, &currentScale);
-                GLfloat moveFactor = 2/currentScale;
+                GLfloat moveFactor = 0.5/currentScale;
                 switch (eK) {
                     case SDLK_UP: {
                         currentCenter[1] -= moveFactor;
