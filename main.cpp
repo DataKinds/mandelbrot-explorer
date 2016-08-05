@@ -15,6 +15,7 @@ float rectPoints[] = {
 GLuint vao;
 GLuint bigRectVbo;
 GLuint shaderProgram;
+GLint scaleLoc;
 unsigned long long frameNum = 0;
 
 void draw(SDL_Window* win) {
@@ -41,6 +42,9 @@ int update(SDL_Window* win) {
             printf("%i\n", e.key.keysym.sym);
             if (e.key.keysym.sym == SDLK_q) {
                 return 0;
+            }
+            else if (e.key.keysym.sym == SDLK_e) {
+
             }
         }
     }
@@ -113,6 +117,13 @@ int main(int argc, char* argv[]) {
         //continue with the stuff
     } else {
         printf("Please define `frameNum` uint in the fragShader.\n");
+        //return 0;
+    }
+    scaleLoc = glGetUniformLocation(shaderProgram, "scale");
+    if (scaleLoc != -1) {
+        //continue with the stuff
+    } else {
+        printf("Please define `scale` float in the fragShader.\n");
         //return 0;
     }
     //finally, go into the main loop (praise jesus)
