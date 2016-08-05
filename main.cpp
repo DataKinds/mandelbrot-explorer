@@ -2,9 +2,8 @@
 #include <GL/glew.h>
 #include <GL/glu.h>
 #include "glShaderHelpers.h"
-#include "algs.h"
-#define SW 512
-#define SH 512
+#define SW 1024
+#define SH 1024
 
 float rectPoints[] = {
     -1.0f, 1.0f,

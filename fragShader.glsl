@@ -3,7 +3,7 @@ out vec4 frag_color;
 in vec4 gl_FragCoord;
 uniform ivec2 screenDims;
 uniform uint frameNum;
-
+precision highp float;
 float magnitude(float real, float imaginary) {
     return sqrt(pow(real, 2.0) + pow(imaginary, 2.0));
 }
@@ -20,7 +20,8 @@ int iterationsToEscape(float x, float y) {
     //nextIteration (a and b) = lastIteration (a and b)^2 + c (x and y)
     while ((magnitude(a, b) < 2.0) && iterations < 100) {
         a = (pow(a, 2.0) - pow(b, 2.0)) + x;
-        b = (2*a*b) + y;
+        //b = (2*a*b) + y;
+        b = ((mod(float(frameNum)/300.0, 3.0) + 1)*a*b) + y;
         iterations++;
     }
     return iterations;
