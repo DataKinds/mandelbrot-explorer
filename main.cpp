@@ -16,16 +16,9 @@ float rectPoints[] = {
 GLuint vao;
 GLuint bigRectVbo;
 GLuint shaderProgram;
-long long frameNum = 0;
+unsigned long long frameNum = 0;
 
 void draw(SDL_Window* win) {
-    //bind the framenum uniform
-    GLint frameNumLoc = glGetUniformLocation(shaderProgram, "frameNum");
-    if (frameNumLoc != -1) {
-        glUniform1i(frameNumLoc, frameNum);
-    } else {
-        printf("Please define `frameNum` in the fragShader.\n");
-    }
     //clear the screen
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -107,11 +100,22 @@ int main(int argc, char* argv[]) {
     if (screenDimsLoc != -1) {
         glUniform2f(screenDimsLoc, SW, SH);
     } else {
-        printf("Please define `screenDims` in the fragShader.\n");
+        printf("Please define `screenDims` vec2 in the fragShader.\n");
+        return 0;
+    }
+    //bind the framenum uniform
+    GLint frameNumLoc = glGetUniformLocation(shaderProgram, "frameNum");
+    if (frameNumLoc != -1) {
+        //continue with the stuff
+    } else {
+        printf("Please define `frameNum` uint in the fragShader.\n");
+        return 0;
     }
     //finally, go into the main loop (praise jesus)
     while (update(win)) {
         draw(win);
+        //set framenum uniform
+        glUniform1ui(frameNumLoc, frameNum);
     }
     SDL_GL_DeleteContext(glc);
     SDL_DestroyWindow(win);
