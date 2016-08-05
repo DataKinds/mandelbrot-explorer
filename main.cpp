@@ -100,14 +100,12 @@ int main(int argc, char* argv[]) {
     //pass in the screen height and width
     GLint screenDimsLoc = glGetUniformLocation(shaderProgram, "screenDims");
     if (screenDimsLoc != -1) {
-        GLfloat glSW = SW;
-        GLfloat glSH = SH;
-        glUniform2f(screenDimsLoc, SW, SH);
+        glUniform2i(screenDimsLoc, SW, SH);
         GLfloat outDims[2];
         glGetUniformfv(shaderProgram, screenDimsLoc, outDims);
         printf("Screen dims set in GLSL as %f, %f\n", outDims[0], outDims[1]);
     } else {
-        printf("Please define `screenDims` vec2 in the fragShader.\n");
+        printf("Please define `screenDims` ivec2 in the fragShader.\n");
         //return 0;
     }
     //bind the framenum uniform
