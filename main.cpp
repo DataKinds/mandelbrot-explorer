@@ -101,7 +101,7 @@ int main(int argc, char* argv[]) {
         glUniform2f(screenDimsLoc, SW, SH);
     } else {
         printf("Please define `screenDims` vec2 in the fragShader.\n");
-        return 0;
+        //return 0;
     }
     //bind the framenum uniform
     GLint frameNumLoc = glGetUniformLocation(shaderProgram, "frameNum");
@@ -109,7 +109,7 @@ int main(int argc, char* argv[]) {
         //continue with the stuff
     } else {
         printf("Please define `frameNum` uint in the fragShader.\n");
-        return 0;
+        //return 0;
     }
     //finally, go into the main loop (praise jesus)
     while (update(win)) {
