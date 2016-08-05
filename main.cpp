@@ -71,15 +71,19 @@ int update(SDL_Window* win) {
                 switch (eK) {
                     case SDLK_UP: {
                         currentCenter[1] -= moveFactor;
+                        break;
                     }
                     case SDLK_DOWN: {
                         currentCenter[1] += moveFactor;
+                        break;
                     }
                     case SDLK_LEFT: {
                         currentCenter[0] -= moveFactor;
+                        break;
                     }
                     case SDLK_RIGHT: {
                         currentCenter[0] += moveFactor;
+                        break;
                     }
                 }
                 glUniform2f(centerLoc, currentCenter[0], currentCenter[1]);
