@@ -29,7 +29,7 @@ int iterationsToEscape(vec2 c) {
 
 void main() {
     //0.0 to 4.0
-    vec2 fractalCoords = (gl_FragCoord.xy * (1 / scale)) / screenDims.xy;
+    vec2 fractalCoords = gl_FragCoord.xy / (screenDims.xy * scale);
     //-2.0 to 2.0
     fractalCoords = fractalCoords - center;
     vec3 shade = vec3(iterationsToEscape(fractalCoords) / 100.0);

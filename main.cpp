@@ -49,15 +49,15 @@ int update(SDL_Window* win) {
             else if (eK == SDLK_r) {
                 GLfloat currentScale;
                 glGetUniformfv(shaderProgram, scaleLoc, &currentScale);
-                currentScale += 0.1f;
+                currentScale *= 1.1f;
                 printf("Current scale: %f\n", currentScale);
                 glUniform1f(scaleLoc, currentScale);
             }
             else if (eK == SDLK_f) {
                 GLfloat currentScale;
                 glGetUniformfv(shaderProgram, scaleLoc, &currentScale);
-                if (currentScale > 0.1f) {
-                    currentScale -= 0.1f;
+                if (currentScale > 0.5f) {
+                    currentScale *= (1.0f / 1.1f);
                 }
                 glUniform1f(scaleLoc, currentScale);
             }
@@ -67,7 +67,7 @@ int update(SDL_Window* win) {
                 glGetUniformfv(shaderProgram, centerLoc, currentCenter);
                 GLfloat currentScale;
                 glGetUniformfv(shaderProgram, scaleLoc, &currentScale);
-                GLfloat moveFactor = 0.4/currentScale;
+                GLfloat moveFactor = 0.1/currentScale;
                 switch (eK) {
                     case SDLK_UP: {
                         currentCenter[1] -= moveFactor;
