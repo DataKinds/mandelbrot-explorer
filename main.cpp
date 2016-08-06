@@ -56,7 +56,7 @@ int update(SDL_Window* win) {
             else if (eK == SDLK_f) {
                 GLfloat currentScale;
                 glGetUniformfv(shaderProgram, scaleLoc, &currentScale);
-                if (currentScale > 0.5f) {
+                if (currentScale > 0.1f) {
                     currentScale *= (1.0f / 1.1f);
                 }
                 glUniform1f(scaleLoc, currentScale);
@@ -67,7 +67,7 @@ int update(SDL_Window* win) {
                 glGetUniformfv(shaderProgram, centerLoc, currentCenter);
                 GLfloat currentScale;
                 glGetUniformfv(shaderProgram, scaleLoc, &currentScale);
-                GLfloat moveFactor = 0.1/currentScale;
+                GLfloat moveFactor = 0.01/currentScale;
                 switch (eK) {
                     case SDLK_UP: {
                         currentCenter[1] -= moveFactor;
@@ -174,8 +174,8 @@ int main(int argc, char* argv[]) {
     //required
     centerLoc = glGetUniformLocation(shaderProgram, "center");
     if (centerLoc != -1) {
-        //make default center -2
-        glUniform2f(centerLoc, 2.0f, 2.0f);
+        //make default center 0,0
+        glUniform2f(centerLoc, 0.0f, 0.0f);
     } else {
         printf("Please define `center` vec2 in the fragShader.\n");
     }

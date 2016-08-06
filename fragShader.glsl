@@ -28,15 +28,14 @@ int iterationsToEscape(vec2 c) {
 }
 
 void main() {
-    //0.0 to 4.0
-    vec2 fractalCoords = gl_FragCoord.xy / (screenDims.xy * scale);
-    //-2.0 to 2.0
+    //0.0 to 1.0
+    vec2 fractalCoords = gl_FragCoord.xy / (screenDims.xy);
+    //-0.5 to 0.5
+    fractalCoords = fractalCoords - 0.5;
+    //-0.5scale to 0.5scale
+    fractalCoords = fractalCoords / scale;
+    //adjust for center
     fractalCoords = fractalCoords - center;
     vec3 shade = vec3(iterationsToEscape(fractalCoords) / 100.0);
-    //ivec2 fragInt = ivec2(int(gl_FragCoord.x), int(gl_FragCoord.y));
-    //if ((fragInt.x ^ fragInt.y) == mod(frameNum, 256)) {
-    //    shade = vec3(1.0);
-    //} else {
-    //}
     frag_color = vec4(shade, 1.0);
 }
