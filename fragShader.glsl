@@ -8,6 +8,7 @@ uniform vec2 center;
 uniform float scale;
 
 int iterationsToEscape(vec2 c) {
+    float i = mod(frameNum / 1000.0, 1.0);
     vec2 z = c;
     int iterations = 0;
     //(a + bi)^2
@@ -19,6 +20,7 @@ int iterationsToEscape(vec2 c) {
     for (; iterations < 100; iterations++) {
         float a = (pow(z.x, 2.0) - pow(z.y, 2.0)) + c.x;
         float b = (2 * z.x * z.y) + c.y;
+        //float b = (2 * (i + 0.5) * z.x * z.y) + c.y;
         if ((pow(a, 2.0) + pow(b, 2.0)) >= 4.0) {
             break;
         }
