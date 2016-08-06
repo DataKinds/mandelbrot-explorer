@@ -17,9 +17,9 @@ int iterationsToEscape(vec2 c) {
     //full formula:
     //nextIteration (a and b) = lastIteration (a and b)^2 + c (x and y)
     for (; iterations < 100; iterations++) {
-        float a = (z.x * z.x - z.y * z.y) + c.x;
+        float a = (pow(z.x, 2.0) - pow(z.y, 2.0)) + c.x;
         float b = (2 * z.x * z.y) + c.y;
-        if ((a * a + b * b) >= 4.0) {
+        if ((pow(a, 2.0) + pow(b, 2.0)) >= 4.0) {
             break;
         }
         z.xy = vec2(a,b);
