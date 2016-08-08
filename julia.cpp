@@ -22,6 +22,7 @@ float rectPoints[] = {
 };
 
 void updateMandelCenter(float real, float imaginary) {
+    printf("Setting julia C to %f+%fi\n", real, imaginary);
     glUniform2f(mandelCenterLoc, real, imaginary);
 }
 
@@ -50,7 +51,6 @@ int update(SDL_Event e) {
         }
         //handle keypresses
         else if (e.type == SDL_KEYDOWN) {
-            printf("%i\n", e.key.keysym.sym);
             auto eK = e.key.keysym.sym;
             if (eK == SDLK_ESCAPE) {
                 return 1;

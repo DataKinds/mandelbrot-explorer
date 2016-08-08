@@ -48,7 +48,6 @@ int update(SDL_Event e) {
         }
         //handle keypresses
         else if (e.type == SDL_KEYDOWN) {
-            printf("%i\n", e.key.keysym.sym);
             auto eK = e.key.keysym.sym;
             if (eK == SDLK_ESCAPE) {
                 return 1;
@@ -96,7 +95,7 @@ int update(SDL_Event e) {
                     }
                 }
                 glUniform2f(centerLoc, currentCenter[0], currentCenter[1]);
-                printf("Current center: %f, %f; moved by %f\n", currentCenter[0], currentCenter[1], moveFactor);
+                printf("Current center: %f+%fi; moved by %f\n", currentCenter[0], currentCenter[1], moveFactor);
                 Julia::updateMandelCenter(currentCenter[0], currentCenter[1]);
             }
         }
