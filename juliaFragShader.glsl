@@ -8,18 +8,19 @@ uniform vec2 center;
 uniform vec2 mandelCenter;
 uniform float scale;
 
-int iterationsToEscape(vec2 z) {
+int iterationsToEscape(vec2 p) {
     float i = mod(frameNum / 1000.0, 1.0);
     int iterations = 0;
     //same as mandel formula, except for that c doesnt change
     //pixel-per-pixel
+    vec2 z;
     for (; iterations < 100; iterations++) {
         float a = (pow(z.x, 2.0) - pow(z.y, 2.0)) + mandelCenter.x;
         float b = (2 * z.x * z.y) + mandelCenter.y;
         if ((pow(a, 2.0) + pow(b, 2.0)) >= 4.0) {
             break;
         }
-        z.xy = vec2(a,b);
+        z.xy = vec2(a, b);
     }
     return iterations;
 }
