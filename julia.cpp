@@ -141,7 +141,7 @@ SDL_Window* init() {
 
     //load up the shader
     shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, loadAndCompileShader("mandelFragShader.glsl", GL_FRAGMENT_SHADER));
+    glAttachShader(shaderProgram, loadAndCompileShader("juliaFragShader.glsl", GL_FRAGMENT_SHADER));
     glAttachShader(shaderProgram, loadAndCompileShader("vertShader.glsl", GL_VERTEX_SHADER));
     //link it all together
     glLinkProgram(shaderProgram);
