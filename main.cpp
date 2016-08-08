@@ -42,18 +42,18 @@ int update(SDL_Window* win) {
         } else if (e.type == SDL_KEYDOWN) {
             printf("%i\n", e.key.keysym.sym);
             auto eK = e.key.keysym.sym;
-            if (eK == SDLK_q) {
+            if (eK == SDLK_ESCAPE) {
                 return 0;
             }
             //zooming
-            else if (eK == SDLK_r) {
+            else if (eK == SDLK_e) {
                 GLfloat currentScale;
                 glGetUniformfv(shaderProgram, scaleLoc, &currentScale);
                 currentScale *= 1.1f;
                 printf("Current scale: %f\n", currentScale);
                 glUniform1f(scaleLoc, currentScale);
             }
-            else if (eK == SDLK_f) {
+            else if (eK == SDLK_q) {
                 GLfloat currentScale;
                 glGetUniformfv(shaderProgram, scaleLoc, &currentScale);
                 if (currentScale > 0.1f) {
@@ -63,26 +63,26 @@ int update(SDL_Window* win) {
                 glUniform1f(scaleLoc, currentScale);
             }
             //scrolling
-            else if ((eK == SDLK_UP) || (eK == SDLK_DOWN) || (eK == SDLK_LEFT) || (eK == SDLK_RIGHT)) {
+            else if ((eK == SDLK_w) || (eK == SDLK_s) || (eK == SDLK_a) || (eK == SDLK_d)) {
                 GLfloat currentCenter[2];
                 glGetUniformfv(shaderProgram, centerLoc, currentCenter);
                 GLfloat currentScale;
                 glGetUniformfv(shaderProgram, scaleLoc, &currentScale);
                 GLfloat moveFactor = 0.04/currentScale;
                 switch (eK) {
-                    case SDLK_UP: {
+                    case SDLK_w: {
                         currentCenter[1] -= moveFactor;
                         break;
                     }
-                    case SDLK_DOWN: {
+                    case SDLK_s: {
                         currentCenter[1] += moveFactor;
                         break;
                     }
-                    case SDLK_LEFT: {
+                    case SDLK_a: {
                         currentCenter[0] += moveFactor;
                         break;
                     }
-                    case SDLK_RIGHT: {
+                    case SDLK_d: {
                         currentCenter[0] -= moveFactor;
                         break;
                     }
