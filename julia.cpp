@@ -25,7 +25,10 @@ float rectPoints[] = {
 void updateMandelCenter(float real, float imaginary) {
     mandelCenter[0] = real;
     mandelCenter[1] = imaginary;
-    printf("Setting julia C to %f+%fi\n", mandelCenter[0], mandelCenter[1]);
+    printf("Setting constant c to %f+%fi\n", mandelCenter[0], mandelCenter[1]);
+    char newWindowTitle[256];
+    snprintf(newWindowTitle, 256, "Julia Set (c = %f+%fi)", mandelCenter[0], mandelCenter[1]);
+    SDL_SetWindowTitle(win, newWindowTitle);
 }
 
 void draw() {
@@ -112,7 +115,7 @@ int update(SDL_Event e) {
 }
 
 SDL_Window* init() {
-    win = SDL_CreateWindow("Julia Fractal", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SW, SH, SDL_WINDOW_OPENGL);
+    win = SDL_CreateWindow("Julia Set", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SW, SH, SDL_WINDOW_OPENGL);
     winId = SDL_GetWindowID(win);
     //get an SDL_GLContext for openGL stuff
     glc = SDL_GL_CreateContext(win);
