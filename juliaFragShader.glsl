@@ -8,19 +8,14 @@ uniform vec2 center;
 uniform vec2 mandelCenter;
 uniform float scale;
 
-int iterationsToEscape(vec2 z, vec2 c) {
+int iterationsToEscape(vec2 z) {
     float i = mod(frameNum / 1000.0, 1.0);
     int iterations = 0;
-    //(a + bi)^2
-    //(a^2 + 2abi - b^2)
-    //real part (a) = (a^2 - b^2)
-    //imaginary part (b) = (2abi)
-    //full formula:
-    //nextIteration (a and b) = lastIteration (a and b)^2 + c (x and y)
+    //same as mandel formula, except for that c doesnt change
+    //pixel-per-pixel
     for (; iterations < 100; iterations++) {
-        float a = (pow(z.x, 2.0) - pow(z.y, 2.0)) + c.x;
-        float b = (2 * z.x * z.y) + c.y;
-        //float b = (2 * (i + 0.5) * z.x * z.y) + c.y;
+        float a = (pow(z.x, 2.0) - pow(z.y, 2.0)) + mandelCenter.x;
+        float b = (2 * z.x * z.y) + mandelCenter.y;
         if ((pow(a, 2.0) + pow(b, 2.0)) >= 4.0) {
             break;
         }
@@ -38,6 +33,6 @@ void main() {
     fractalCoords = fractalCoords / scale;
     //adjust for center
     fractalCoords = fractalCoords - center;
-    vec3 shade = vec3(iterationsToEscape(fractalCoords, mandelCenter) / 100.0);
+    vec3 shade = vec3(iterationsToEscape(fractalCoords) / 100.0);
     frag_color = vec4(shade, 1.0);
 }
