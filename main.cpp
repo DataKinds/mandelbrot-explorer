@@ -24,12 +24,17 @@ int main(int argc, char* argv[]) {
     //done with glew
     mandelWin = Mandel::init();
     //finally, go into the main loop (praise jesus)
-    while (Mandel::update()) {
-        Mandel::draw();
+    SDL_Event e;
+    int shouldContinue = 1;
+    while (shouldContinue) {
+        while (SDL_PollEvent(&e)) {
+            shouldContinue = (Mandel::update(e) | Julia::update(e));
+        }
+        Mandel::draw(); Julia::draw();
         //set framenum uniform
         //glUniform1ui(frameNumLoc, frameNum);
     }
-    Mandel::destroy();
+    Mandel::destroy(); Julia::destroy();
     SDL_Quit();
     return 0;
 }

@@ -3,7 +3,7 @@
 
 namespace Mandel{
 SDL_Window* init();
-int update();
+int update(SDL_Event e);
 void draw();
 void destroy();
 }

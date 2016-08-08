@@ -5,6 +5,7 @@
 
 namespace Julia {
 SDL_Window* win;
+unsigned int winId;
 SDL_GLContext glc;
 GLuint vao;
 GLuint vbo;
@@ -35,10 +36,10 @@ void draw() {
 }
 
 //0 if closing, 1 if not
-int update() {
+int update(SDL_Event e) {
     SDL_GL_MakeCurrent(win, glc);
-    SDL_Event e;
-    while (SDL_PollEvent(&e)) {
+    //make sure events are going to julia window, not mandelbrot
+    if (e.window.windowID == winId) {
         if (e.type == SDL_QUIT) {
             return 0;
         }
@@ -95,7 +96,6 @@ int update() {
                 printf("Current center: %f, %f; moved by %f\n", currentCenter[0], currentCenter[1], moveFactor);
             }
         }
-        //handle mouse presses (julia fractal)
         else if (e.type == SDL_MOUSEBUTTONDOWN) {
 
         }
@@ -105,6 +105,7 @@ int update() {
 
 SDL_Window* init() {
     win = SDL_CreateWindow("Julia Fractal", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SW, SH, SDL_WINDOW_OPENGL);
+    winId = SDL_GetWindowID(win);
     //get an SDL_GLContext for openGL stuff
     glc = SDL_GL_CreateContext(win);
     SDL_GL_MakeCurrent(win, glc);
