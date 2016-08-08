@@ -20,6 +20,7 @@ float rectPoints[] = {
 };
 
 void draw() {
+    SDL_GL_MakeCurrent(win, glc);
     //clear the screen
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -35,6 +36,7 @@ void draw() {
 
 //0 if closing, 1 if not
 int update() {
+    SDL_GL_MakeCurrent(win, glc);
     SDL_Event e;
     while (SDL_PollEvent(&e)) {
         if (e.type == SDL_QUIT) {
@@ -105,6 +107,7 @@ SDL_Window* init() {
     win = SDL_CreateWindow("Julia Fractal", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SW, SH, SDL_WINDOW_OPENGL);
     //get an SDL_GLContext for openGL stuff
     glc = SDL_GL_CreateContext(win);
+    SDL_GL_MakeCurrent(win, glc);
     glewExperimental = GL_TRUE;
     glewInit();
     //initialize the VAOs and VBOs

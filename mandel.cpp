@@ -7,6 +7,7 @@
 //avoid naming conflicts with julia.cpp
 namespace Mandel {
 SDL_Window* win;
+unsigned int winId;
 SDL_GLContext glc;
 GLuint vao;
 GLuint vbo;
@@ -22,6 +23,7 @@ float rectPoints[] = {
 };
 
 void draw() {
+    SDL_GL_MakeCurrent(win, glc);
     //clear the screen
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -38,67 +40,73 @@ void draw() {
 
 //0 if closing, 1 if not
 int update() {
+    SDL_GL_MakeCurrent(win, glc);
+    //make sure events are going to mandelbrot window, not julia
+    //we dont have to worry about the other window because this one
+    //gets all the events first, so it can filter.
     SDL_Event e;
-    while (SDL_PollEvent(&e)) {
-        if (e.type == SDL_QUIT) {
-            return 0;
-        }
-        //handle keypresses
-        else if (e.type == SDL_KEYDOWN) {
-            printf("%i\n", e.key.keysym.sym);
-            auto eK = e.key.keysym.sym;
-            if (eK == SDLK_ESCAPE) {
+    while(SDL_PeepEvents(&e, 1, SDL_PEEKEVENT, SDL_FIRSTEVENT, SDL_LASTEVENT)) {
+        if (e.window.windowID == winId) {
+            SDL_PollEvent(&e);
+            if (e.type == SDL_QUIT) {
                 return 0;
             }
-            //zooming
-            else if (eK == SDLK_e) {
-                GLfloat currentScale;
-                glGetUniformfv(shaderProgram, scaleLoc, &currentScale);
-                currentScale *= 1.1f;
-                printf("Current scale: %f\n", currentScale);
-                glUniform1f(scaleLoc, currentScale);
-            }
-            else if (eK == SDLK_q) {
-                GLfloat currentScale;
-                glGetUniformfv(shaderProgram, scaleLoc, &currentScale);
-                if (currentScale > 0.1f) {
-                    currentScale *= (1.0f / 1.1f);
+            //handle keypresses
+            else if (e.type == SDL_KEYDOWN) {
+                printf("%i\n", e.key.keysym.sym);
+                auto eK = e.key.keysym.sym;
+                if (eK == SDLK_ESCAPE) {
+                    return 0;
+                }
+                //zooming
+                else if (eK == SDLK_e) {
+                    GLfloat currentScale;
+                    glGetUniformfv(shaderProgram, scaleLoc, &currentScale);
+                    currentScale *= 1.1f;
                     printf("Current scale: %f\n", currentScale);
+                    glUniform1f(scaleLoc, currentScale);
                 }
-                glUniform1f(scaleLoc, currentScale);
-            }
-            //scrolling
-            else if ((eK == SDLK_w) || (eK == SDLK_s) || (eK == SDLK_a) || (eK == SDLK_d)) {
-                GLfloat currentCenter[2];
-                glGetUniformfv(shaderProgram, centerLoc, currentCenter);
-                GLfloat currentScale;
-                glGetUniformfv(shaderProgram, scaleLoc, &currentScale);
-                GLfloat moveFactor = 0.04/currentScale;
-                switch (eK) {
-                    case SDLK_w: {
-                        currentCenter[1] -= moveFactor;
-                        break;
+                else if (eK == SDLK_q) {
+                    GLfloat currentScale;
+                    glGetUniformfv(shaderProgram, scaleLoc, &currentScale);
+                    if (currentScale > 0.1f) {
+                        currentScale *= (1.0f / 1.1f);
+                        printf("Current scale: %f\n", currentScale);
                     }
-                    case SDLK_s: {
-                        currentCenter[1] += moveFactor;
-                        break;
-                    }
-                    case SDLK_a: {
-                        currentCenter[0] += moveFactor;
-                        break;
-                    }
-                    case SDLK_d: {
-                        currentCenter[0] -= moveFactor;
-                        break;
-                    }
+                    glUniform1f(scaleLoc, currentScale);
                 }
-                glUniform2f(centerLoc, currentCenter[0], currentCenter[1]);
-                printf("Current center: %f, %f; moved by %f\n", currentCenter[0], currentCenter[1], moveFactor);
+                //scrolling
+                else if ((eK == SDLK_w) || (eK == SDLK_s) || (eK == SDLK_a) || (eK == SDLK_d)) {
+                    GLfloat currentCenter[2];
+                    glGetUniformfv(shaderProgram, centerLoc, currentCenter);
+                    GLfloat currentScale;
+                    glGetUniformfv(shaderProgram, scaleLoc, &currentScale);
+                    GLfloat moveFactor = 0.04/currentScale;
+                    switch (eK) {
+                        case SDLK_w: {
+                            currentCenter[1] -= moveFactor;
+                            break;
+                        }
+                        case SDLK_s: {
+                            currentCenter[1] += moveFactor;
+                            break;
+                        }
+                        case SDLK_a: {
+                            currentCenter[0] += moveFactor;
+                            break;
+                        }
+                        case SDLK_d: {
+                            currentCenter[0] -= moveFactor;
+                            break;
+                        }
+                    }
+                    glUniform2f(centerLoc, currentCenter[0], currentCenter[1]);
+                    printf("Current center: %f, %f; moved by %f\n", currentCenter[0], currentCenter[1], moveFactor);
+                }
             }
-        }
-        //handle mouse presses (julia fractal)
-        else if (e.type == SDL_MOUSEBUTTONDOWN) {
+            else if (e.type == SDL_MOUSEBUTTONDOWN) {
 
+            }
         }
     }
     Julia::update();
@@ -107,8 +115,10 @@ int update() {
 
 SDL_Window* init() {
     win = SDL_CreateWindow("Mandelbrot", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SW, SH, SDL_WINDOW_OPENGL);
+    winId = SDL_GetWindowID(win);
     //get an SDL_GLContext for openGL stuff
     glc = SDL_GL_CreateContext(win);
+    SDL_GL_MakeCurrent(win, glc);
     glewExperimental = GL_TRUE;
     glewInit();
     //initialize the VAOs and VBOs
