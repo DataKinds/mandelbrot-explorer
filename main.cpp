@@ -4,6 +4,7 @@
 #include "glShaderHelpers.h"
 #include "constants.h"
 #include "mandel.h"
+#include "julia.h"
 
 
 SDL_Window* mandelWin;
@@ -20,17 +21,15 @@ int main(int argc, char* argv[]) {
     //use openGL 3.0 and later
     glewExperimental = GL_TRUE;
     glewInit();
-    glewExperimental = GL_TRUE;
     //done with glew
-
-    mandelWin = initMandel();
+    mandelWin = Mandel::init();
     //finally, go into the main loop (praise jesus)
-    while (updateMandel()) {
-        drawMandel();
+    while (Mandel::update()) {
+        Mandel::draw();
         //set framenum uniform
         //glUniform1ui(frameNumLoc, frameNum);
     }
-    destroyMandel();
+    Mandel::destroy();
     SDL_Quit();
     return 0;
 }

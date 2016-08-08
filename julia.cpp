@@ -2,10 +2,8 @@
 #include <GL/glew.h>
 #include "constants.h"
 #include "glShaderHelpers.h"
-#include "julia.h"
 
-//avoid naming conflicts with julia.cpp
-namespace Mandel {
+namespace Julia {
 SDL_Window* win;
 SDL_GLContext glc;
 GLuint vao;
@@ -33,7 +31,6 @@ void draw() {
     //draw the rectPoints
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
     SDL_GL_SwapWindow(win);
-    Julia::draw();
 }
 
 //0 if closing, 1 if not
@@ -101,12 +98,11 @@ int update() {
 
         }
     }
-    Julia::update();
     return 1;
 }
 
 SDL_Window* init() {
-    win = SDL_CreateWindow("Mandelbrot", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SW, SH, SDL_WINDOW_OPENGL);
+    win = SDL_CreateWindow("Julia Fractal", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SW, SH, SDL_WINDOW_OPENGL);
     //get an SDL_GLContext for openGL stuff
     glc = SDL_GL_CreateContext(win);
     glewExperimental = GL_TRUE;
@@ -178,12 +174,10 @@ SDL_Window* init() {
     } else {
         printf("Please define `center` vec2 in the fragShader.\n");
     }
-    Julia::init();
     return win;
 }
 
 void destroy() {
-    Julia::destroy();
     SDL_GL_DeleteContext(glc);
     SDL_DestroyWindow(win);
 }
