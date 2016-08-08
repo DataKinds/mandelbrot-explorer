@@ -28,7 +28,10 @@ int main(int argc, char* argv[]) {
     int shouldContinue = 1;
     while (shouldContinue) {
         while (SDL_PollEvent(&e)) {
-            shouldContinue = (Mandel::update(e) | Julia::update(e));
+            shouldContinue = !(Mandel::update(e) | Julia::update(e));
+            if (!shouldContinue) {
+                break;
+            }
         }
         Mandel::draw(); Julia::draw();
         //set framenum uniform

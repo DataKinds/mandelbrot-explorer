@@ -46,14 +46,14 @@ int update(SDL_Event e) {
     //make sure events are going to julia window, not mandelbrot
     if (e.window.windowID == winId) {
         if (e.type == SDL_QUIT) {
-            return 0;
+            return 1;
         }
         //handle keypresses
         else if (e.type == SDL_KEYDOWN) {
             printf("%i\n", e.key.keysym.sym);
             auto eK = e.key.keysym.sym;
             if (eK == SDLK_ESCAPE) {
-                return 0;
+                return 1;
             }
             //zooming
             else if (eK == SDLK_e) {
@@ -105,7 +105,7 @@ int update(SDL_Event e) {
 
         }
     }
-    return 1;
+    return 0;
 }
 
 SDL_Window* init() {
