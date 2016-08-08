@@ -13,6 +13,7 @@ GLuint shaderProgram;
 GLint scaleLoc;
 GLint centerLoc;
 GLint mandelCenterLoc;
+float mandelCenter[2];
 float rectPoints[] = {
     -1.0f, 1.0f,
     1.0f, 1.0f,
@@ -22,8 +23,9 @@ float rectPoints[] = {
 };
 
 void updateMandelCenter(float real, float imaginary) {
-    printf("Setting julia C to %f+%fi\n", real, imaginary);
-    glUniform2f(mandelCenterLoc, real, imaginary);
+    mandelCenter[0] = real;
+    mandelCenter[1] = imaginary;
+    printf("Setting julia C to %f+%fi\n", mandelCenter[0], mandelCenter[1]);
 }
 
 void draw() {
@@ -44,6 +46,7 @@ void draw() {
 //0 if closing, 1 if not
 int update(SDL_Event e) {
     SDL_GL_MakeCurrent(win, glc);
+    glUniform2f(mandelCenterLoc, mandelCenter[0], mandelCenter[1]);
     //make sure events are going to julia window, not mandelbrot
     if (e.window.windowID == winId) {
         if (e.type == SDL_QUIT) {
@@ -186,6 +189,9 @@ SDL_Window* init() {
     //required
     mandelCenterLoc = glGetUniformLocation(shaderProgram, "mandelCenter");
     if (mandelCenterLoc != -1) {
+        //make default mandelCenter 0,0
+        //this matches mandel.cpp's center
+        glUniform2f(mandelCenterLoc, 0.0f, 0.0f);
     } else {
         printf("Please define `mandelCenterLoc` vec2 in the fragShader.\n");
     }
