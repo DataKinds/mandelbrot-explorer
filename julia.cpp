@@ -12,6 +12,7 @@ GLuint vbo;
 GLuint shaderProgram;
 GLint scaleLoc;
 GLint centerLoc;
+GLint mandelCenterLoc;
 float rectPoints[] = {
     -1.0f, 1.0f,
     1.0f, 1.0f,
@@ -19,6 +20,10 @@ float rectPoints[] = {
     -1.0f, -1.0f,
     -1.0f, 1.0f
 };
+
+void updateMandelCenter(float real, float imaginary) {
+    glUniform2f(mandelCenterLoc, real, imaginary);
+}
 
 void draw() {
     SDL_GL_MakeCurrent(win, glc);
@@ -177,6 +182,12 @@ SDL_Window* init() {
         glUniform2f(centerLoc, 0.0f, 0.0f);
     } else {
         printf("Please define `center` vec2 in the fragShader.\n");
+    }
+    //required
+    mandelCenterLoc = glGetUniformLocation(shaderProgram, "mandelCenter");
+    if (mandelCenterLoc != -1) {
+    } else {
+        printf("Please define `mandelCenterLoc` vec2 in the fragShader.\n");
     }
     return win;
 }

@@ -97,6 +97,7 @@ int update(SDL_Event e) {
                 }
                 glUniform2f(centerLoc, currentCenter[0], currentCenter[1]);
                 printf("Current center: %f, %f; moved by %f\n", currentCenter[0], currentCenter[1], moveFactor);
+                Julia::updateMandelCenter(currentCenter[0], currentCenter[1]);
             }
         }
         else if (e.type == SDL_MOUSEBUTTONDOWN) {
