@@ -107,7 +107,7 @@ int update(SDL_Event e) {
 }
 
 SDL_Window* init() {
-    win = SDL_CreateWindow("Mandelbrot", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SW, SH, SDL_WINDOW_OPENGL);
+    win = SDL_CreateWindow("Mandelbrot Fractal", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SW, SH, SDL_WINDOW_OPENGL);
     winId = SDL_GetWindowID(win);
     //get an SDL_GLContext for openGL stuff
     glc = SDL_GL_CreateContext(win);
