@@ -14,7 +14,7 @@ int iterationsToEscape(vec2 c) {
     //same as mandel formula, except for that c doesnt change
     //pixel-per-pixel
     vec2 z = c;
-    for (; iterations < 100; iterations++) {
+    for (; iterations < 400; iterations++) {
         float a = (pow(z.x, 2.0) - pow(z.y, 2.0)) + mandelCenter.x;
         float b = (2 * z.x * z.y) + mandelCenter.y;
         if ((pow(a, 2.0) + pow(b, 2.0)) >= 4.0) {
